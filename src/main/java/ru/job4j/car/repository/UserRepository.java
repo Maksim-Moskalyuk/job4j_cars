@@ -119,5 +119,4 @@ public class UserRepository {
             return query.uniqueResultOptional();
         }
     }
-
 }

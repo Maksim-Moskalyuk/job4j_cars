@@ -14,6 +14,6 @@ public class Permission {
     private int id;
     private String name;
 
-    //@Singular("accessBy")
+    /*@Singular("accessBy")*/
     private List<String> rules;
 }
