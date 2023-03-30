@@ -102,7 +102,7 @@ public class UserRepository {
     public List<User> findByLikeLogin(String key) {
         try (Session session = sf.openSession()) {
             Query<User> query = session.createQuery("From User Where login like :login");
-            query.setParameter("login", "%"+ key +"%");
+            query.setParameter("login", "%" + key + "%");
             return query.getResultList();
         }
     }
@@ -119,4 +119,5 @@ public class UserRepository {
             return query.uniqueResultOptional();
         }
     }
+
 }

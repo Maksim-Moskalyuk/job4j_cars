@@ -11,6 +11,7 @@ import java.util.List;
 public class UserUsage {
 
     public static void main(String[] args) {
+
         StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
                 .configure().build();
         try (SessionFactory sf = new MetadataSources(registry)
