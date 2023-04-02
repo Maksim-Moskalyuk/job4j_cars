@@ -6,8 +6,6 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import ru.job4j.car.model.User;
 
-import java.util.List;
-
 public class UserUsage {
 
     public static void main(String[] args) {
@@ -17,7 +15,7 @@ public class UserUsage {
                 .buildMetadata().buildSessionFactory()) {
             var userRepository = new UserRepository(sf);
             var user = new User();
-            user.setLogin("Meizikin");
+            user.setLogin("Denis");
             user.setPassword("pass");
             userRepository.create(user);
             userRepository.findAllOrderById()

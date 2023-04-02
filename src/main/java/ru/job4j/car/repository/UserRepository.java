@@ -3,11 +3,9 @@ package ru.job4j.car.repository;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.mapping.Collection;
 import org.hibernate.query.Query;
 import ru.job4j.car.model.User;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,15 +22,13 @@ public class UserRepository {
         Session session = sf.openSession();
         try {
             session.beginTransaction();
-            session.createNativeQuery(
-                            "INSERT INTO auto_user (login, password) VALUES (:login, :password)")
-                    .setParameter("login", user.getLogin())
-                    .setParameter("password", user.getPassword())
-                    .executeUpdate();
+            session.save(user);
             session.getTransaction().commit();
-            session.close();
+
         } catch (Exception e) {
             session.getTransaction().rollback();
+        } finally {
+            session.close();
         }
         return user;
     }
@@ -47,9 +43,10 @@ public class UserRepository {
             session.beginTransaction();
             session.update(user);
             session.getTransaction().commit();
-            session.close();
         } catch (Exception e) {
             session.getTransaction().rollback();
+        } finally {
+            session.close();
         }
     }
 
@@ -65,9 +62,10 @@ public class UserRepository {
             user.setId(userId);
             session.delete(user);
             session.getTransaction().commit();
-            session.close();
         } catch (Exception e) {
             session.getTransaction().rollback();
+        } finally {
+            session.close();
         }
     }
 
@@ -76,9 +74,12 @@ public class UserRepository {
      * @return список пользователей.
      */
     public List<User> findAllOrderById() {
-        try (Session session = sf.openSession();) {
+        Session session = sf.openSession();
+        try {
             Query<User> query = session.createQuery("from User u Order by u.id");
             return query.getResultList();
+        } finally {
+            session.close();
         }
     }
 
@@ -87,10 +88,13 @@ public class UserRepository {
      * @return пользователь.
      */
     public Optional<User> findById(int id) {
-        try (Session session = sf.openSession()) {
+        Session session = sf.openSession();
+        try {
             Query<User> query = session.createQuery("From User Where id=:id");
             query.setParameter("id", id);
             return query.uniqueResultOptional();
+        } finally {
+            session.close();
         }
     }
 
@@ -100,10 +104,13 @@ public class UserRepository {
      * @return список пользователей.
      */
     public List<User> findByLikeLogin(String key) {
-        try (Session session = sf.openSession()) {
+        Session session = sf.openSession();
+        try {
             Query<User> query = session.createQuery("From User Where login like :login");
             query.setParameter("login", "%" + key + "%");
             return query.getResultList();
+        } finally {
+            session.close();
         }
     }
 
@@ -113,10 +120,13 @@ public class UserRepository {
      * @return Optional or user.
      */
     public Optional<User> findByLogin(String login) {
-        try (Session session = sf.openSession()) {
+        Session session = sf.openSession();
+        try {
             Query<User> query = session.createQuery("from User where login = :login", User.class);
             query.setParameter("login", login).setMaxResults(1);
             return query.uniqueResultOptional();
+        } finally {
+            session.close();
         }
     }
 }
