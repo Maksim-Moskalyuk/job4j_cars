@@ -24,7 +24,6 @@ public class UserRepository {
             session.beginTransaction();
             session.save(user);
             session.getTransaction().commit();
-
         } catch (Exception e) {
             session.getTransaction().rollback();
         } finally {
@@ -75,12 +74,17 @@ public class UserRepository {
      */
     public List<User> findAllOrderById() {
         Session session = sf.openSession();
+        Query<User> query = null;
         try {
-            Query<User> query = session.createQuery("from User u Order by u.id");
-            return query.getResultList();
+            session.beginTransaction();
+            query = session.createQuery("from User u Order by u.id");
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            session.getTransaction().rollback();
         } finally {
             session.close();
         }
+        return query.getResultList();
     }
 
     /**
@@ -89,13 +93,18 @@ public class UserRepository {
      */
     public Optional<User> findById(int id) {
         Session session = sf.openSession();
+        Query<User> query = null;
         try {
-            Query<User> query = session.createQuery("From User Where id=:id");
+            session.beginTransaction();
+            query = session.createQuery("From User Where id=:id");
             query.setParameter("id", id);
-            return query.uniqueResultOptional();
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            session.getTransaction().rollback();
         } finally {
             session.close();
         }
+        return query.uniqueResultOptional();
     }
 
     /**
@@ -105,13 +114,18 @@ public class UserRepository {
      */
     public List<User> findByLikeLogin(String key) {
         Session session = sf.openSession();
+        Query<User> query = null;
         try {
-            Query<User> query = session.createQuery("From User Where login like :login");
+            session.beginTransaction();
+            query = session.createQuery("From User Where login like :login");
             query.setParameter("login", "%" + key + "%");
-            return query.getResultList();
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            session.getTransaction().rollback();
         } finally {
             session.close();
         }
+        return query.getResultList();
     }
 
     /**
@@ -121,12 +135,15 @@ public class UserRepository {
      */
     public Optional<User> findByLogin(String login) {
         Session session = sf.openSession();
+        Query<User> query = null;
         try {
-            Query<User> query = session.createQuery("from User where login = :login", User.class);
+            session.beginTransaction();
+            query = session.createQuery("from User where login = :login", User.class);
             query.setParameter("login", login).setMaxResults(1);
-            return query.uniqueResultOptional();
+            session.getTransaction().commit();
         } finally {
             session.close();
         }
+        return query.uniqueResultOptional();
     }
 }
