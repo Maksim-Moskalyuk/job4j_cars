@@ -79,6 +79,7 @@ public class UserRepository {
             session.beginTransaction();
             query = session.createQuery("from User u Order by u.id");
             session.getTransaction().commit();
+            return query.getResultList();
         } catch (Exception e) {
             session.getTransaction().rollback();
         } finally {
@@ -99,6 +100,7 @@ public class UserRepository {
             query = session.createQuery("From User Where id=:id");
             query.setParameter("id", id);
             session.getTransaction().commit();
+            return query.uniqueResultOptional();
         } catch (Exception e) {
             session.getTransaction().rollback();
         } finally {
@@ -120,6 +122,7 @@ public class UserRepository {
             query = session.createQuery("From User Where login like :login");
             query.setParameter("login", "%" + key + "%");
             session.getTransaction().commit();
+            return query.getResultList();
         } catch (Exception e) {
             session.getTransaction().rollback();
         } finally {
@@ -141,6 +144,9 @@ public class UserRepository {
             query = session.createQuery("from User where login = :login", User.class);
             query.setParameter("login", login).setMaxResults(1);
             session.getTransaction().commit();
+            return query.uniqueResultOptional();
+        } catch (Exception e) {
+            session.getTransaction().rollback();
         } finally {
             session.close();
         }
